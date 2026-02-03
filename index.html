@@ -28,6 +28,7 @@
             justify-content: space-between; 
             color: var(--text-main);
             position: relative;
+            touch-action: none; /* Evita zoom accidental */
         }
 
         /* --- FONDO ANIMADO --- */
@@ -85,7 +86,7 @@
         .btn-container {
             display: flex;
             justify-content: center; 
-            gap: 150px; /* Separación amplia */
+            gap: 150px; 
             width: 100%;
             max-width: 800px; 
             margin: 0 auto;
@@ -105,8 +106,9 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             white-space: nowrap;
-            /* Importante para el z-index en móvil */
             z-index: 50; 
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
         #yes-btn {
@@ -122,7 +124,7 @@
             border: 2px solid #ffc9c9;
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
             position: relative; 
-            transition: all 0.3s ease; /* Movimiento suave */
+            transition: all 0.3s ease; 
         }
 
         /* --- PERSONAJE --- */
@@ -153,7 +155,7 @@
         .img-hidden { opacity: 0; z-index: 1; }
         #img-neutral { z-index: 0; } 
 
-        /* --- OVERLAYS (PANTALLAS FINALES) --- */
+        /* --- OVERLAYS --- */
         .overlay {
             position: fixed;
             inset: 0; 
@@ -222,15 +224,29 @@
             z-index: 90;
         }
 
-        /* Responsive Móvil */
-        @media (max-width: 600px) {
-            h1 { font-size: 2.5rem; }
-            p { font-size: 1.1rem; }
-            .btn-container { gap: 20px; flex-direction: column; align-items: center; }
-            .btn { width: 80%; }
-            .character-stage { height: 40vh; }
+        /* --- RESPONSIVE MÓVIL --- */
+        @media (max-width: 850px) { /* Aumentado a 850px para cubrir más celulares */
+            h1 { font-size: 2.2rem; margin-bottom: 5px; }
+            p { font-size: 1rem; margin-bottom: 20px; }
+            
+            .btn-container { 
+                gap: 20px; 
+                flex-direction: column; 
+                align-items: center; 
+                height: auto; /* Permitir que crezca */
+            }
+
+            /* Botones MÁS PEQUEÑOS en móvil */
+            .btn { 
+                width: auto; 
+                min-width: 120px;
+                padding: 10px 25px; /* Menos relleno */
+                font-size: 1rem; /* Letra más pequeña */
+            }
+            
+            .character-stage { height: 45vh; }
             .response-img { max-height: 45vh; }
-            .final-text h2 { font-size: 2.2rem; }
+            .final-text h2 { font-size: 2rem; }
         }
     </style>
 </head>
@@ -242,7 +258,8 @@
     </div>
 
     <div class="top-section" id="main-ui">
-        <h1>Cami vill du vara min dejt på alla hjärtans dag?</h1>
+        <h1>Vill du bli min Valentin?</h1>
+        <p>Du får mitt hjärta att slå ett extra slag...</p>
 
         <div class="btn-container">
             <button id="yes-btn" class="btn">Ja, självklart! ❤️</button>
@@ -261,8 +278,8 @@
         <div class="content-wrapper">
             <img src="respuestafeliz.png" class="response-img" alt="Happy Response">
             <div class="final-text">
-                <h2>YAAAYYY! ❤️</h2>
-                <p>Jag älskar dig</p>
+                <h2>Jag älskar dig!</h2>
+                <p>Tack för att du gör mig så lycklig. ❤️</p>
             </div>
         </div>
     </div>
@@ -291,39 +308,42 @@
 
         const SENSITIVITY = 400; 
 
-        // Variable para contar los intentos en móvil
+        // Variables de juego móvil
         let mobileNoClicks = 0;
-        const maxMobileClicks = 3; // Al 3er click se rinde
+        const maxMobileClicks = 5;
 
-        // --- 1. LÓGICA DE CARAS (SOLO COMPUTADORA O MOUSE) ---
-        // Usamos matchMedia para detectar si NO es táctil (aprox) para la lógica de caras
-        // O simplemente dejamos que corra, en móvil el "mousemove" no disparará mucho.
-        document.addEventListener('mousemove', (e) => {
-            if(successOverlay.classList.contains('active') || sadOverlay.classList.contains('active')) return;
+        // Detección robusta de dispositivo táctil
+        const isMobile = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (window.innerWidth < 850);
 
-            const distYes = getDist(btnYes, e.clientX, e.clientY);
-            const distNo = getDist(btnNo, e.clientX, e.clientY);
+        // --- 1. CARAS (Solo si NO es táctil para evitar lag) ---
+        if (!isMobile) {
+            document.addEventListener('mousemove', (e) => {
+                if(successOverlay.classList.contains('active') || sadOverlay.classList.contains('active')) return;
 
-            let happyOp = Math.pow(Math.max(0, 1 - (distYes / SENSITIVITY)), 1.5);
-            let sadOp = Math.pow(Math.max(0, 1 - (distNo / SENSITIVITY)), 1.5);
+                const distYes = getDist(btnYes, e.clientX, e.clientY);
+                const distNo = getDist(btnNo, e.clientX, e.clientY);
 
-            if (happyOp > 0.1) {
-                imgHappy.style.opacity = happyOp;
-                imgSad.style.opacity = 0;
-            } else if (sadOp > 0.1) {
-                imgHappy.style.opacity = 0;
-                imgSad.style.opacity = sadOp;
-            } else {
-                imgHappy.style.opacity = 0;
-                imgSad.style.opacity = 0;
-            }
+                let happyOp = Math.pow(Math.max(0, 1 - (distYes / SENSITIVITY)), 1.5);
+                let sadOp = Math.pow(Math.max(0, 1 - (distNo / SENSITIVITY)), 1.5);
 
-            if (happyOp > 0.2 || sadOp > 0.2) {
-                imgNeutral.style.opacity = Math.max(0, 1 - (happyOp + sadOp));
-            } else {
-                imgNeutral.style.opacity = 1;
-            }
-        });
+                if (happyOp > 0.1) {
+                    imgHappy.style.opacity = happyOp;
+                    imgSad.style.opacity = 0;
+                } else if (sadOp > 0.1) {
+                    imgHappy.style.opacity = 0;
+                    imgSad.style.opacity = sadOp;
+                } else {
+                    imgHappy.style.opacity = 0;
+                    imgSad.style.opacity = 0;
+                }
+
+                if (happyOp > 0.2 || sadOp > 0.2) {
+                    imgNeutral.style.opacity = Math.max(0, 1 - (happyOp + sadOp));
+                } else {
+                    imgNeutral.style.opacity = 1;
+                }
+            });
+        }
 
         function getDist(el, mx, my) {
             const r = el.getBoundingClientRect();
@@ -332,50 +352,47 @@
             return Math.sqrt(Math.pow(mx - cx, 2) + Math.pow(my - cy, 2));
         }
 
-        // --- 2. LÓGICA BOTÓN "NO" (ESCAPISTA) ---
+        // --- 2. LÓGICA BOTÓN "NO" ---
         
-        // A) MODO ESCRITORIO (Mouse): Huye al acercarse
-        btnNo.addEventListener('mouseover', (e) => {
-            // Solo si es pantalla grande/mouse
-            if (window.matchMedia("(hover: hover)").matches) {
-                moveButtonSmoothly();
-            }
-        });
+        // Versión Desktop (Mouse): Huye al acercarse
+        if (!isMobile) {
+            btnNo.addEventListener('mouseover', () => {
+                const x = (Math.random() * 300) - 150;
+                const y = (Math.random() * 300) - 150;
+                btnNo.style.transform = `translate(${x}px, ${y}px)`;
+            });
+        }
 
-        // B) MODO CLIC (Móvil y Escritorio)
+        // Versión Click (Universal)
         btnNo.addEventListener('click', (e) => {
             e.preventDefault();
 
-            // Detectar si es Móvil (pantalla pequeña)
-            if (window.innerWidth <= 768) {
-                mobileNoClicks++;
-
-                // Si aún tiene intentos (click 1 y 2)
+            // LÓGICA ESTRICTA PARA MÓVIL
+            if (isMobile) {
+                mobileNoClicks++; // Aumenta contador
+                
+                // Click 1 y 2: Se mueve
                 if (mobileNoClicks < maxMobileClicks) {
-                    moveButtonWildly(); // Salto grande
-                } else {
-                    // 3er click: Game Over
+                    moveButtonWildly(); 
+                } 
+                // Click 3: Pierde
+                else {
                     transitionToOverlay(sadOverlay);
                 }
-            } else {
-                // En escritorio, si logra clickearlo (difícil), pierde directo
+            } 
+            // LÓGICA DESKTOP (Si logran darle clic, pierden directo)
+            else {
                 transitionToOverlay(sadOverlay);
             }
         });
 
-        // Función: Movimiento suave (Escritorio)
-        function moveButtonSmoothly() {
-            const x = (Math.random() * 200) - 100;
-            const y = (Math.random() * 100) - 50;
-            btnNo.style.transform = `translate(${x}px, ${y}px)`;
-        }
-
-        // Función: Movimiento salvaje (Móvil - Teletransporte)
+        // Función Teletransporte Móvil
         function moveButtonWildly() {
-            // Hacemos el botón 'fixed' para poder moverlo a cualquier parte de la pantalla
             btnNo.style.position = 'fixed';
+            // Z-index alto para que se vea sobre todo
+            btnNo.style.zIndex = '1000'; 
             
-            // Calculamos límites seguros (para que no se salga de la pantalla)
+            // Márgenes de seguridad para que no quede cortado
             const margin = 20;
             const maxX = window.innerWidth - btnNo.offsetWidth - margin;
             const maxY = window.innerHeight - btnNo.offsetHeight - margin;
@@ -383,12 +400,9 @@
             const randomX = Math.max(margin, Math.random() * maxX);
             const randomY = Math.max(margin, Math.random() * maxY);
 
-            // Aplicamos nueva posición
             btnNo.style.left = randomX + 'px';
             btnNo.style.top = randomY + 'px';
-            
-            // Reseteamos transform porque ahora usamos top/left
-            btnNo.style.transform = 'none';
+            btnNo.style.transform = 'none'; // Quitamos transform para usar top/left limpio
         }
 
         // --- 3. LÓGICA BOTÓN "SÍ" ---
@@ -398,7 +412,6 @@
             startConfetti();
         });
 
-        // --- UTILIDADES ---
         function transitionToOverlay(overlay) {
             mainUi.style.opacity = 0;
             charStage.style.opacity = 0;
