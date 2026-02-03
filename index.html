@@ -18,14 +18,17 @@
 
         body {
             margin: 0;
+            /* Usamos dvh para evitar que la barra del navegador tape cosas */
             height: 100vh;
+            height: 100dvh; 
             font-family: 'Lato', sans-serif;
             background-color: var(--bg-color);
             overflow: hidden; 
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: space-between; 
+            /* Cambio clave: justify-content flex-end para apilar desde abajo */
+            justify-content: flex-end; 
             color: var(--text-main);
             position: relative;
             touch-action: none; 
@@ -53,13 +56,18 @@
             100% { transform: translate(30px, 50px) scale(1.1); }
         }
 
-        /* --- CONTENIDO PRINCIPAL --- */
+        /* --- CONTENIDO SUPERIOR (Texto y Botones) --- */
         .top-section {
             text-align: center;
             width: 100%;
-            padding-top: 5vh; 
             z-index: 10;
             transition: opacity 0.5s;
+            /* Esto permite que el texto ocupe el espacio disponible arriba de la imagen */
+            flex: 1; 
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* Centra el texto verticalmente en el espacio sobrante */
+            padding-bottom: 20px; /* Espacio mínimo con la imagen */
         }
 
         h1 {
@@ -70,14 +78,14 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             filter: drop-shadow(0 2px 4px rgba(255,255,255,0.5));
-            line-height: 1.2;
+            line-height: 1.1;
         }
 
         p {
             font-size: 1.5rem;
             color: #862e55;
             margin-top: 10px;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
             font-weight: 400;
             text-shadow: 0 1px 2px rgba(255,255,255,0.8);
         }
@@ -91,7 +99,6 @@
             max-width: 800px; 
             margin: 0 auto;
             position: relative;
-            padding: 20px 0;
         }
 
         .btn {
@@ -127,17 +134,20 @@
             transition: all 0.3s ease; 
         }
 
-        /* --- PERSONAJE --- */
+        /* --- PERSONAJE (Anclado abajo) --- */
         .character-stage {
             position: relative;
             width: 100%;
-            height: 50vh; 
+            /* Altura controlada para móvil */
+            height: 45vh; 
             max-height: 500px;
             display: flex;
             justify-content: center;
             align-items: flex-end; 
             z-index: 5;
             pointer-events: none; 
+            /* Importante: margin-bottom 0 asegura que toque el borde */
+            margin-bottom: 0;
         }
 
         .character-img {
@@ -224,26 +234,38 @@
             z-index: 90;
         }
 
-        /* --- RESPONSIVE MÓVIL --- */
-        @media (max-width: 850px) { 
-            h1 { font-size: 2.2rem; margin-bottom: 5px; }
-            p { font-size: 1rem; margin-bottom: 20px; }
+        /* --- AJUSTES ESPECÍFICOS PARA MÓVIL --- */
+        @media (max-height: 850px), (max-width: 850px) { 
             
+            /* Compactar texto */
+            .top-section {
+                justify-content: flex-end; /* Empujar texto hacia abajo cerca de la imagen */
+                padding-bottom: 10px; /* Menos espacio entre botones e imagen */
+            }
+
+            h1 { font-size: 2rem; margin-bottom: 5px; }
+            p { font-size: 1.1rem; margin-bottom: 20px; }
+            
+            /* Botones verticales y más pegados */
             .btn-container { 
-                gap: 20px; 
+                gap: 15px; /* Menos espacio entre botones */
                 flex-direction: column; 
                 align-items: center; 
-                height: auto; 
+                width: 100%;
             }
 
             .btn { 
                 width: auto; 
-                min-width: 120px;
-                padding: 10px 25px; 
+                min-width: 160px; /* Ancho cómodo */
+                padding: 12px 25px; 
                 font-size: 1rem; 
             }
             
-            .character-stage { height: 45vh; }
+            /* Imagen un poco más pequeña para que quepa todo */
+            .character-stage { 
+                height: 40vh; /* Ocupa menos de la mitad */
+            }
+            
             .response-img { max-height: 45vh; }
             .final-text h2 { font-size: 2rem; }
         }
@@ -277,7 +299,7 @@
             <img src="respuestafeliz.png" class="response-img" alt="Happy Response">
             <div class="final-text">
                 <h2>YAAAYYY!</h2>
-                <p>Jag älskar dig</p>
+                <p>Jag älskar dig!</p>
             </div>
         </div>
     </div>
@@ -308,16 +330,15 @@
 
         // Variables de estado
         let mobileNoClicks = 0;
-        const maxMobileClicks = 5;
+        const maxMobileClicks = 3;
         const isMobile = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (window.innerWidth < 850);
         
-        // VARIABLE NUEVA: Bloqueo de transición
+        // Bloqueo de transición
         let isTransitioning = false;
 
-        // --- 1. CARAS (Interacción) ---
+        // --- 1. CARAS (Interacción Mouse - Solo PC) ---
         if (!isMobile) {
             document.addEventListener('mousemove', (e) => {
-                // Si ya estamos en transición (esperando el segundo), no hacer nada
                 if (isTransitioning || successOverlay.classList.contains('active') || sadOverlay.classList.contains('active')) return;
 
                 const distYes = getDist(btnYes, e.clientX, e.clientY);
@@ -354,10 +375,10 @@
 
         // --- 2. LOGICA BOTÓN "NO" ---
         
-        // Escritorio: Huir
+        // Escritorio: Huir al hover
         if (!isMobile) {
             btnNo.addEventListener('mouseover', () => {
-                if (isTransitioning) return; // No huir si ya le dimos click
+                if (isTransitioning) return; 
                 const x = (Math.random() * 300) - 150;
                 const y = (Math.random() * 300) - 150;
                 btnNo.style.transform = `translate(${x}px, ${y}px)`;
@@ -367,18 +388,30 @@
         // Click Handler (Universal)
         btnNo.addEventListener('click', (e) => {
             e.preventDefault();
-            if (isTransitioning) return; // Evitar doble click
+            if (isTransitioning) return; 
 
             if (isMobile) {
                 mobileNoClicks++; 
+                // Click 1 y 2: Se mueve y MUESTRA CARA TRISTE
                 if (mobileNoClicks < maxMobileClicks) {
                     moveButtonWildly(); 
+                    
+                    // Efecto visual rápido: Cara triste por 0.5s y vuelve a neutral
+                    imgNeutral.style.opacity = 0;
+                    imgSad.style.opacity = 1;
+                    setTimeout(() => {
+                        if(!isTransitioning) {
+                            imgSad.style.opacity = 0;
+                            imgNeutral.style.opacity = 1;
+                        }
+                    }, 500);
+
                 } else {
-                    // Click final en móvil
+                    // Click 3 (Final): Transición completa
                     triggerTransition(imgSad, sadOverlay);
                 }
             } else {
-                // Click en escritorio
+                // PC: Transición directa
                 triggerTransition(imgSad, sadOverlay);
             }
         });
@@ -404,37 +437,35 @@
             e.preventDefault();
             if (isTransitioning) return;
             
-            // Disparar confeti inmediatamente para celebrar
             startConfetti();
-            // Iniciar transición con espera
             triggerTransition(imgHappy, successOverlay);
         });
 
         // --- FUNCIÓN MAESTRA DE TRANSICIÓN CON ESPERA ---
         function triggerTransition(targetImage, overlay) {
-            isTransitioning = true; // Bloqueamos movimiento
+            isTransitioning = true; 
 
-            // 1. Forzar mostrar la imagen de reacción (Feliz o Triste)
+            // 1. Forzar mostrar reacción
             imgNeutral.style.opacity = 0;
             imgHappy.style.opacity = 0;
             imgSad.style.opacity = 0;
             
             targetImage.style.opacity = 1; 
-            targetImage.style.zIndex = 10; // Asegurar que esté encima
+            targetImage.style.zIndex = 10; 
             
-            // 2. Esperar 1 segundo (1000ms)
+            // 2. Esperar 1 segundo
             setTimeout(() => {
                 // 3. Desvanecer UI
                 mainUi.style.opacity = 0;
                 charStage.style.opacity = 0;
                 
-                // 4. Mostrar Overlay final
+                // 4. Mostrar Overlay
                 setTimeout(() => {
                     mainUi.style.display = 'none';
                     charStage.style.display = 'none';
                     overlay.classList.add('active');
-                }, 500); // Tiempo del fade-out CSS
-            }, 1000); // Tiempo de espera viendo la cara
+                }, 500); 
+            }, 1000); 
         }
 
         // --- CONFETI ---
