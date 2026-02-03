@@ -1,267 +1,435 @@
 <!DOCTYPE html>
 <html lang="sv">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>För Min Älskling</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>För Min Älskling</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
 
-<style>
-body{
-    margin:0;
-    height:100vh;
-    font-family:'Montserrat',sans-serif;
-    background:linear-gradient(135deg,#ffe6e6,#ffc3cf);
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    overflow:hidden;
-    color:#880e4f;
-}
+    <style>
+        :root {
+            --primary: #d6336c;
+            --bg-color: #fff0f3;
+            --text-main: #491d33;
+        }
 
-.main{
-    text-align:center;
-    z-index:2;
-    padding:20px;
-    max-width:420px;
-    transition: opacity 0.5s ease;
-}
+        * { box-sizing: border-box; }
 
-h1{
-    font-family:'Great Vibes',cursive;
-    font-size:3.2rem;
-    margin-bottom:10px;
-    color:#c2185b;
-}
+        body {
+            margin: 0;
+            height: 100vh;
+            font-family: 'Lato', sans-serif;
+            background-color: var(--bg-color);
+            overflow: hidden; /* Evita scroll en la vista principal */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between; /* Distribuye el espacio verticalmente */
+            color: var(--text-main);
+            position: relative;
+        }
 
-p{
-    font-size:1.1rem;
-    margin-bottom:20px;
-}
+        /* --- FONDO ANIMADO --- */
+        .ambient-light {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.5;
+            animation: float 20s infinite ease-in-out alternate;
+        }
+        .orb-1 { width: 50vh; height: 50vh; background: #ffc9c9; top: -10%; left: -10%; }
+        .orb-2 { width: 40vh; height: 40vh; background: #ffec99; bottom: -10%; right: -10%; animation-delay: -5s; }
 
-.character{
-    width:240px;
-    height:340px;
-    margin:0 auto 20px;
-    position:relative;
-}
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(30px, 50px) scale(1.1); }
+        }
 
-.character img{
-    position:absolute;
-    inset:0;
-    width:100%;
-    height:100%;
-    object-fit:contain;
-    transition:opacity .2s ease;
-}
+        /* --- CONTENIDO PRINCIPAL (TEXTO Y BOTONES) --- */
+        .top-section {
+            text-align: center;
+            width: 100%;
+            padding-top: 5vh; /* Espacio arriba */
+            z-index: 10;
+        }
 
-#happy,#sad{opacity:0}
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem; /* Título más grande */
+            margin: 0;
+            background: -webkit-linear-gradient(45deg, #c2255c, #ff4757);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            /* Sombra suave para que se lea bien sin contenedor */
+            filter: drop-shadow(0 2px 4px rgba(255,255,255,0.5));
+            line-height: 1.2;
+        }
 
-/* Se aumentó el gap a 60px para separar más los botones */
-.buttons{
-    display:flex;
-    gap:60px; 
-    justify-content:center;
-    align-items: center;
-    margin-top: 30px;
-}
+        p {
+            font-size: 1.5rem;
+            color: #862e55;
+            margin-top: 10px;
+            margin-bottom: 40px;
+            font-weight: 400;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.8);
+        }
 
-button{
-    padding:14px 30px;
-    border-radius:999px;
-    border:none;
-    font-size:1.1rem;
-    font-weight:700;
-    cursor:pointer;
-}
+        /* --- BOTONES (MUY SEPARADOS) --- */
+        .btn-container {
+            display: flex;
+            justify-content: center; /* Centrados horizontalmente */
+            gap: 150px; /* GRAN SEPARACIÓN para notar el cambio de cara */
+            width: 100%;
+            max-width: 800px; /* Permite que se separen bastante en PC */
+            margin: 0 auto;
+            position: relative;
+            padding: 20px 0;
+        }
 
-#yes{
-    background:#ff4081;
-    color:white;
-    transition: transform 0.2s;
-}
+        .btn {
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-family: 'Lato', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            white-space: nowrap;
+        }
 
-#yes:hover { transform: scale(1.1); }
+        #yes-btn {
+            background: linear-gradient(135deg, #ff6b6b 0%, #f03e3e 100%);
+            color: white;
+            box-shadow: 0 8px 20px rgba(240, 62, 62, 0.3);
+            z-index: 20;
+        }
+        #yes-btn:hover { transform: scale(1.1); box-shadow: 0 10px 25px rgba(240, 62, 62, 0.5); }
 
-#no{
-    background:white;
-    color:#880e4f;
-    border:2px solid #f8bbd0;
-    position: relative;
-    /* Transición suave para el escape en desktop */
-    transition: transform 0.2s ease-out; 
-}
+        #no-btn {
+            background: rgba(255,255,255,0.8);
+            color: #c92a2a;
+            border: 2px solid #ffc9c9;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            /* Importante para que se mueva */
+            position: relative; 
+        }
 
-/* Animación de temblor más intensa */
-@keyframes shake {
-    0% { margin-left: 0rem; }
-    25% { margin-left: 0.2rem; }
-    75% { margin-left: -0.2rem; }
-    100% { margin-left: 0rem; }
-}
+        /* --- PERSONAJE (EN LA BASE) --- */
+        .character-stage {
+            position: relative;
+            width: 100%;
+            height: 50vh; /* Ocupa la mitad inferior */
+            max-height: 500px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end; /* Alineado abajo */
+            z-index: 5;
+            pointer-events: none; /* Click a través de la imagen */
+        }
 
-.shaking {
-    animation: shake 0.1s infinite;
-}
+        .character-img {
+            position: absolute;
+            bottom: 0;
+            height: 100%; 
+            width: auto; /* Mantiene proporción */
+            max-width: 90%;
+            object-fit: contain;
+            transition: opacity 0.3s ease;
+            filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.6));
+        }
 
-/* reproductor youtube */
-.player-wrapper{
-    position:fixed;
-    bottom:20px;
-    left:50%;
-    transform:translateX(-50%);
-    width:300px;
-    height:60px;
-    overflow:hidden;
-    border-radius:14px;
-    opacity:.85;
-}
-.player-wrapper iframe{
-    width:300px;
-    height:180px;
-    margin-top:-60px;
-}
+        /* Clases de visibilidad */
+        .img-visible { opacity: 1; z-index: 2; }
+        .img-hidden { opacity: 0; z-index: 1; }
+        #img-neutral { z-index: 0; } /* Neutral siempre al fondo */
 
-/* pantalla final */
-.final{
-    position:fixed;
-    inset:0;
-    background:linear-gradient(135deg,#ff80ab,#ffb6c1);
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    text-align:center;
-    opacity:0;
-    pointer-events:none;
-    transition:.6s;
-    z-index: 10;
-}
+        /* --- PANTALLAS FINALES (OVERLAYS) --- */
+        .overlay {
+            position: fixed;
+            inset: 0; /* Top, left, right, bottom 0 */
+            background: #fff0f3; /* Fondo sólido */
+            z-index: 100;
+            
+            /* Flexbox para centrar todo perfectamente */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+            text-align: center;
+            padding: 20px;
+        }
 
-.final.active{
-    opacity:1;
-    pointer-events:auto;
-}
+        .overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
 
-.final-box{
-    background:rgba(255,255,255,.25);
-    backdrop-filter:blur(10px);
-    padding:40px;
-    border-radius:30px;
-    color:white;
-}
+        .content-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 600px;
+        }
 
-.final-box h2{
-    font-family:'Great Vibes',cursive;
-    font-size:3rem;
-}
-</style>
+        /* Imágenes de respuesta grandes y centradas */
+        .response-img {
+            width: auto;
+            height: auto;
+            max-width: 90%; /* No salirse del ancho */
+            max-height: 55vh; /* No ocupar toda la altura para dejar sitio al texto */
+            object-fit: contain;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+            margin-bottom: 30px; /* Espacio para el texto debajo */
+            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .final-text h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            color: #d6336c;
+            margin: 0 0 10px 0;
+            line-height: 1.1;
+        }
+
+        .final-text p {
+            font-size: 1.4rem;
+            color: #491d33;
+            margin: 0;
+            opacity: 0.9;
+        }
+
+        /* Canvas Confeti */
+        #confetti-canvas {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 90;
+        }
+
+        /* Responsive Móvil */
+        @media (max-width: 600px) {
+            h1 { font-size: 2.5rem; }
+            p { font-size: 1.1rem; }
+            .btn-container { gap: 20px; flex-direction: column; align-items: center; padding-bottom: 0; }
+            .btn { width: 80%; }
+            .character-stage { height: 40vh; }
+            .response-img { max-height: 45vh; }
+            .final-text h2 { font-size: 2.2rem; }
+        }
+    </style>
 </head>
 <body>
 
-<div class="main" id="main-content">
-    <div class="character" id="character-container">
-        <img src="neutral.png" id="neutral">
-        <img src="feliz.png" id="happy">
-        <img src="triste.png" id="sad">
+    <div class="ambient-light">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
     </div>
 
-    <h1>Vill du bli min Valentin?</h1>
-    <p>Du får mitt hjärta att slå snabbare…</p>
+    <div class="top-section" id="main-ui">
+        <h1>Vill du bli min Valentin?</h1>
+        <p>Du får mitt hjärta att slå ett extra slag...</p>
 
-    <div class="buttons">
-        <button id="yes">Ja, självklart</button>
-        <button id="no">Nej</button>
+        <div class="btn-container">
+            <button id="yes-btn" class="btn">Ja, självklart! ❤️</button>
+            <button id="no-btn" class="btn">Nej...</button>
+        </div>
     </div>
-</div>
 
-<div class="player-wrapper" id="player">
-<iframe
-    src="https://www.youtube.com/embed/dSRZ_1ncRhQ?enablejsapi=1&controls=1"
-    frameborder="0"
-    allow="autoplay; encrypted-media">
-</iframe>
-</div>
-
-<div class="final" id="final">
-    <div class="final-box">
-        <h2>Jag älskar dig</h2>
-        <p>Du är det bästa som hänt mig  
-        och jag väljer dig idag och alltid.</p>
+    <div class="character-stage" id="char-stage">
+        <img src="neutral.png" id="img-neutral" class="character-img img-visible" alt="Neutral">
+        <img src="feliz.png" id="img-happy" class="character-img img-hidden" alt="Feliz">
+        <img src="triste.png" id="img-sad" class="character-img img-hidden" alt="Triste">
     </div>
-</div>
 
-<script>
-const yes = document.getElementById('yes');
-const no = document.getElementById('no');
-const happy = document.getElementById('happy');
-const sad = document.getElementById('sad');
-const characterContainer = document.getElementById('character-container');
-const finalScreen = document.getElementById('final');
-const mainContent = document.getElementById('main-content');
+    <div class="overlay" id="success-overlay">
+        <canvas id="confetti-canvas"></canvas>
+        <div class="content-wrapper">
+            <img src="respuestafeliz.png" class="response-img" alt="Happy Response">
+            <div class="final-text">
+                <h2>Yaaayy!❤️</h2>
+                <p>Jag älskar dig</p>
+            </div>
+        </div>
+    </div>
 
-const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768;
+    <div class="overlay" id="sad-overlay">
+        <div class="content-wrapper">
+            <img src="respuestatriste.png" class="response-img" alt="Sad Response">
+            <div class="final-text">
+                <h2 style="color: #888;">Neeeeej... 💔</h2>
+                <p>Är du säker?</p>
+            </div>
+        </div>
+    </div>
 
-/* Lógica para Computadora (Escapar y Temblar) */
-if(!isMobile) {
-    document.addEventListener('mousemove', e => {
-        const r = no.getBoundingClientRect();
-        const btnCenterX = r.left + r.width / 2;
-        const btnCenterY = r.top + r.height / 2;
+    <script>
+        const btnYes = document.getElementById('yes-btn');
+        const btnNo = document.getElementById('no-btn');
+        const imgNeutral = document.getElementById('img-neutral');
+        const imgHappy = document.getElementById('img-happy');
+        const imgSad = document.getElementById('img-sad');
         
-        // Distancia entre cursor y botón
-        const distance = Math.hypot(e.clientX - btnCenterX, e.clientY - btnCenterY);
+        const mainUi = document.getElementById('main-ui');
+        const charStage = document.getElementById('char-stage');
+        const successOverlay = document.getElementById('success-overlay');
+        const sadOverlay = document.getElementById('sad-overlay');
 
-        // Control de opacidad de emociones
-        const dYes = Math.hypot(e.clientX - (yes.getBoundingClientRect().left + yes.offsetWidth/2), e.clientY - (yes.getBoundingClientRect().top + yes.offsetHeight/2));
-        happy.style.opacity = Math.max(0, 1 - dYes / 250);
-        sad.style.opacity = Math.max(0, 1 - distance / 250);
+        // Distancia base para reaccionar (mayor porque los botones están lejos)
+        const SENSITIVITY = 400; 
 
-        // Efecto de huida si el cursor está a menos de 120px
-        if (distance < 120) {
-            no.classList.add('shaking');
-            
-            // Calculamos dirección opuesta
-            const angle = Math.atan2(btnCenterY - e.clientY, btnCenterX - e.clientX);
-            
-            // Se aleja 40px de la posición original
-            const pushX = Math.cos(angle) * 40;
-            const pushY = Math.sin(angle) * 40;
+        // 1. LOGICA DE CAMBIO DE CARA
+        document.addEventListener('mousemove', (e) => {
+            if(successOverlay.classList.contains('active') || sadOverlay.classList.contains('active')) return;
 
-            no.style.transform = `translate(${pushX}px, ${pushY}px)`;
-        } else {
-            no.classList.remove('shaking');
-            no.style.transform = `translate(0, 0)`;
+            // Distancia al centro de cada botón
+            const distYes = getDist(btnYes, e.clientX, e.clientY);
+            const distNo = getDist(btnNo, e.clientX, e.clientY);
+
+            // Opacidad invertida (más cerca = 1)
+            let happyOp = Math.max(0, 1 - (distYes / SENSITIVITY));
+            let sadOp = Math.max(0, 1 - (distNo / SENSITIVITY));
+
+            // Potencia para hacer la transición más marcada cerca del botón
+            happyOp = Math.pow(happyOp, 1.5);
+            sadOp = Math.pow(sadOp, 1.5);
+
+            // Asignar opacidades
+            if (happyOp > 0.1) {
+                imgHappy.style.opacity = happyOp;
+                imgSad.style.opacity = 0;
+            } else if (sadOp > 0.1) {
+                imgHappy.style.opacity = 0;
+                imgSad.style.opacity = sadOp;
+            } else {
+                imgHappy.style.opacity = 0;
+                imgSad.style.opacity = 0;
+            }
+
+            // Neutral: Se desvanece si alguna emoción es fuerte
+            if (happyOp > 0.2 || sadOp > 0.2) {
+                imgNeutral.style.opacity = Math.max(0, 1 - (happyOp + sadOp));
+            } else {
+                imgNeutral.style.opacity = 1;
+            }
+        });
+
+        function getDist(el, mx, my) {
+            const r = el.getBoundingClientRect();
+            const cx = r.left + r.width/2;
+            const cy = r.top + r.height/2;
+            return Math.sqrt(Math.pow(mx - cx, 2) + Math.pow(my - cy, 2));
         }
-    });
-}
 
-/* Botón NO: Comportamiento */
-no.addEventListener('click', () => {
-    if (isMobile) {
-        // Salto abrupto solo en móvil
-        const maxX = window.innerWidth - no.offsetWidth - 20;
-        const maxY = window.innerHeight - no.offsetHeight - 20;
-        const x = Math.random() * maxX;
-        const y = Math.random() * maxY;
-        no.style.position = 'fixed';
-        no.style.left = x + 'px';
-        no.style.top = y + 'px';
-    } else {
-        alert("¡Casi! Inténtalo de nuevo ❤️");
-    }
-});
+        // 2. LOGICA BOTÓN "NO" ESCAPISTA
+        btnNo.addEventListener('mouseover', moveButton);
+        // Soporte para móvil (touch)
+        btnNo.addEventListener('touchstart', (e) => {
+            // En móvil solo se mueve si intentas tocarlo, a veces permitiendo el click por suerte
+            if (Math.random() > 0.3) moveButton(); 
+        });
 
-/* Botón SÍ: Desaparecer PNGs y mostrar final */
-yes.addEventListener('click', () => {
-    characterContainer.style.display = 'none'; // Desaparecen los PNGs por completo
-    mainContent.style.opacity = '0';
-    
-    setTimeout(() => {
-        finalScreen.classList.add('active');
-    }, 300);
-});
-</script>
+        function moveButton() {
+            // Movimiento aleatorio pero controlado
+            const offsetX = (Math.random() * 200) - 100; // -100px a 100px
+            const offsetY = (Math.random() * 100) - 50;  // -50px a 50px
+            
+            btnNo.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+        }
 
+        // 3. CLICK EN NO (Si logra darle)
+        btnNo.addEventListener('click', (e) => {
+            e.preventDefault();
+            transitionToOverlay(sadOverlay);
+        });
+
+        // 4. CLICK EN SI
+        btnYes.addEventListener('click', (e) => {
+            e.preventDefault();
+            transitionToOverlay(successOverlay);
+            startConfetti();
+        });
+
+        function transitionToOverlay(overlay) {
+            // Desvanecer pantalla principal
+            mainUi.style.opacity = 0;
+            charStage.style.opacity = 0;
+            
+            // Esperar y mostrar overlay
+            setTimeout(() => {
+                mainUi.style.display = 'none';
+                charStage.style.display = 'none';
+                overlay.classList.add('active');
+            }, 500);
+        }
+
+        // 5. EFECTO CONFETI
+        function startConfetti() {
+            const canvas = document.getElementById('confetti-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            
+            const particles = [];
+            const colors = ['#ff6b6b', '#fcc2d7', '#d6336c', '#ffffff', '#ffd43b'];
+
+            for(let i=0; i<150; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height - canvas.height,
+                    vx: Math.random() * 2 - 1,
+                    vy: Math.random() * 3 + 2,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    size: Math.random() * 8 + 4,
+                    rotation: Math.random() * 360
+                });
+            }
+
+            function animate() {
+                ctx.clearRect(0,0,canvas.width, canvas.height);
+                particles.forEach(p => {
+                    p.y += p.vy;
+                    p.x += p.vx;
+                    p.rotation += 2;
+                    if(p.y > canvas.height) p.y = -10;
+                    
+                    ctx.save();
+                    ctx.translate(p.x, p.y);
+                    ctx.rotate(p.rotation * Math.PI/180);
+                    ctx.fillStyle = p.color;
+                    ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size);
+                    ctx.restore();
+                });
+                requestAnimationFrame(animate);
+            }
+            animate();
+        }
+
+        // Ajustar canvas al redimensionar
+        window.addEventListener('resize', () => {
+            const c = document.getElementById('confetti-canvas');
+            if(c) { c.width = window.innerWidth; c.height = window.innerHeight; }
+        });
+    </script>
 </body>
 </html>
