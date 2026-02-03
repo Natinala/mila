@@ -1,253 +1,191 @@
 <!DOCTYPE html>
-<html lang="sv">
-<head>
+<html lang="sv"> <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vill du bli min Valentin?</title>
+    <title>För Min Älskling</title> <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700&display=swap');
-
         body {
-            /* Fondo rosa con lunares */
-            background-color: #ffdde1;
-            background-image: radial-gradient(#ee9ca7 15%, transparent 16%),
-            radial-gradient(#ee9ca7 15%, transparent 16%);
-            background-size: 60px 60px;
-            background-position: 0 0, 30px 30px;
-            font-family: 'Nunito', sans-serif;
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #ffe6e6 0%, #ffc3cf 100%);
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            min-height: 100vh; /* Asegura que ocupe toda la altura */
+            justify-content: center;
+            height: 100vh;
             margin: 0;
-            overflow: hidden; /* Evita barras de desplazamiento por los corazones */
+            overflow: hidden; /* Para que los corazones no creen scroll */
+            color: #d6336c;
         }
 
-        .container {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 2.5rem;
-            border-radius: 25px;
-            box-shadow: 0 10px 30px rgba(211, 47, 47, 0.2);
+        /* --- FONDO DE CORAZONES ANIMADOS --- */
+        .heart-bg {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 2rem;
+            animation: floatUp 10s linear infinite;
+            z-index: 0;
+            user-select: none;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
+            50% { opacity: 0.8; }
+            100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+        }
+
+        /* --- CONTENEDOR PRINCIPAL --- */
+        .main-content {
+            z-index: 10;
             text-align: center;
-            max-width: 400px;
-            width: 85%;
             position: relative;
-            border: 3px solid #fff;
-        }
-
-        /* ESTILO DE LA IMAGEN */
-        .avatar-image {
-            width: 180px; /* Tamaño de la imagen */
-            height: 180px;
-            object-fit: cover; /* Asegura que la foto llene el círculo sin deformarse */
-            border-radius: 50%; /* La hace redonda */
-            border: 5px solid #ffdde1; /* Borde rosa alrededor de la foto */
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-            transition: transform 0.3s ease; /* Suaviza los movimientos */
         }
 
         h1 {
-            color: #d32f2f;
-            font-family: 'Fredoka One', cursive;
-            margin-bottom: 10px;
-            font-size: 2rem;
-            letter-spacing: 1px;
+            font-family: 'Great Vibes', cursive;
+            font-size: 4rem;
+            margin-bottom: 0.2rem;
+            text-shadow: 2px 2px 4px rgba(255, 105, 180, 0.2);
+            color: #c2185b;
         }
 
         p {
-            color: #666;
-            font-size: 1.1rem;
-            margin-bottom: 2rem;
-            font-weight: 600;
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: #880e4f;
         }
+
+        /* --- IMÁGENES DEL PERSONAJE --- */
+        .character-wrapper {
+            position: relative;
+            width: 300px;
+            height: 450px;
+            margin: 0 auto 30px auto;
+        }
+
+        .character-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transition: opacity 0.15s ease-out;
+            pointer-events: none;
+            filter: drop-shadow(0 10px 15px rgba(194, 24, 91, 0.3)); /* Sombra rosa suave */
+        }
+
+        .neutral { z-index: 1; opacity: 1; }
+        .emotion-layer { z-index: 2; opacity: 0; }
 
         /* --- BOTONES --- */
-        .buttons {
+        .buttons-container {
             display: flex;
             justify-content: center;
-            gap: 15px;
-            flex-wrap: wrap; /* Para pantallas muy pequeñas */
+            gap: 40px;
+            position: relative;
+            z-index: 20;
         }
 
-        button {
-            padding: 12px 25px;
+        .btn {
+            padding: 15px 40px;
+            font-size: 1.2rem;
             border: none;
             border-radius: 50px;
-            font-size: 1.1rem;
             cursor: pointer;
-            transition: all 0.2s ease;
-            font-family: 'Fredoka One', cursive;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: bold;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
-        #yesBtn {
-            background-color: #4CAF50;
+        #btn-si {
+            background-color: #ff4081;
             color: white;
+            border: 2px solid #ff4081;
         }
 
-        #yesBtn:hover {
-            transform: scale(1.05) translateY(-3px);
-            background-color: #43a047;
-            box-shadow: 0 6px 12px rgba(76, 175, 80, 0.3);
+        #btn-si:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(255, 64, 129, 0.6);
         }
 
-        #noBtn {
-            background-color: #ef5350;
-            color: white;
+        #btn-no {
+            background-color: white;
+            color: #880e4f;
+            border: 2px solid #f8bbd0;
         }
 
-        #noBtn:hover {
-            /* El botón NO ya no necesita hover aquí porque se mueve con JS */
-            background-color: #e53935;
+        #btn-no:hover {
+            background-color: #ffebee;
         }
 
-        /* Mensaje final oculto */
-        #success-message {
-            display: none; /* Oculto al principio */
-            margin-top: 20px;
-            color: #d32f2f;
-            font-family: 'Fredoka One', cursive;
-            font-size: 1.6rem;
-            animation: popIn 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Animación de rebote */
-        }
-
-        @keyframes popIn {
-            0% { transform: scale(0); opacity: 0; }
-            80% { transform: scale(1.1); opacity: 1; }
-            100% { transform: scale(1); opacity: 1; }
-        }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <img src="https://cdn-icons-png.flaticon.com/512/1211/1211064.png" alt="Avatar" class="avatar-image" id="avatarImg">
+    <div class="heart-bg" style="left: 10%; animation-duration: 8s;">❤️</div>
+    <div class="heart-bg" style="left: 30%; animation-duration: 12s; font-size: 1.5rem;">💖</div>
+    <div class="heart-bg" style="left: 70%; animation-duration: 7s;">💕</div>
+    <div class="heart-bg" style="left: 90%; animation-duration: 10s; font-size: 3rem;">❤️</div>
+    <div class="heart-bg" style="left: 50%; animation-duration: 15s;">💘</div>
 
-        <h1>Vill du bli min Valentin?</h1>
-        <p>Välj noga... jag tittar på dig! 👀</p>
-
-        <div class="buttons">
-            <button id="yesBtn">Ja, självklart!</button>
-            <button id="noBtn">Nej...</button>
+    <div class="main-content">
+        
+        <div class="character-wrapper">
+            <img src="neutral.png" class="character-img neutral" alt="Tänker">
+            
+            <img src="feliz.png" class="character-img emotion-layer" id="layer-happy" alt="Glad">
+            <img src="triste.png" class="character-img emotion-layer" id="layer-sad" alt="Ledsen">
         </div>
 
-        <div id="success-message">
-            Jag visste det! ❤️ Tack älskling!
+        <h1>Vill du bli min Valentin?</h1>
+        
+        <p>Du får mitt hjärta att slå snabbare...</p>
+
+        <div class="buttons-container">
+            <button id="btn-si" class="btn">Ja, självklart! ❤️</button>
+            
+            <button id="btn-no" class="btn">Nej...</button>
         </div>
     </div>
 
     <script>
-        // ======================================================
-        // ZONA DE CONFIGURACIÓN DE IMÁGENES
-        // ======================================================
-        // CAMBIA ESTO por los nombres de tus archivos reales:
-        const imagenFeliz = "https://cdn-icons-png.flaticon.com/512/1211/1211064.png"; // Ej: "foto_feliz.jpg"
-        const imagenTriste = "https://cdn-icons-png.flaticon.com/512/1211/1211025.png"; // Ej: "foto_triste.jpg"
-        // ======================================================
+        const layerHappy = document.getElementById('layer-happy');
+        const layerSad = document.getElementById('layer-sad');
+        const btnSi = document.getElementById('btn-si');
+        const btnNo = document.getElementById('btn-no');
+        const maxDistance = 350; 
 
-
-        const avatarImg = document.getElementById('avatarImg');
-        const yesBtn = document.getElementById('yesBtn');
-        const noBtn = document.getElementById('noBtn');
-        const title = document.querySelector('h1');
-        const p = document.querySelector('p');
-        const buttonsDiv = document.querySelector('.buttons');
-        const successMsg = document.getElementById('success-message');
-
-        // Precargar la imagen triste para que no haya parpadeo
-        const preloadImage = new Image();
-        preloadImage.src = imagenTriste;
-
-        // --- Lógica del Mouse ---
-
-        // Cuando el mouse entra en SI
-        yesBtn.addEventListener('mouseenter', () => {
-            avatarImg.src = imagenFeliz; // Asegurar que esté feliz
-            avatarImg.style.transform = "scale(1.1)"; // Un pequeño zoom de felicidad
-        });
-
-        // Cuando el mouse sale de SI
-        yesBtn.addEventListener('mouseleave', () => {
-             avatarImg.style.transform = "scale(1)"; // Vuelve a tamaño normal
-        });
-
-        // Cuando el mouse entra en NO
-        noBtn.addEventListener('mouseenter', () => {
-            // CAMBIO DE IMAGEN A TRISTE
-            avatarImg.src = imagenTriste;
-            avatarImg.style.transform = "rotate(-5deg) scale(0.95)"; // Se encoge un poco y se inclina
-            
-            // Movimiento gracioso del botón NO (más difícil de atrapar)
-            const randomX = Math.floor(Math.random() * 100) - 50; // Rango más amplio
-            const randomY = Math.floor(Math.random() * 100) - 50;
-            noBtn.style.transform = `translate(${randomX}px, ${randomY}px)`;
-        });
-
-        // Cuando el mouse sale de NO
-        noBtn.addEventListener('mouseleave', () => {
-            // VUELVE A FELIZ
-            avatarImg.src = imagenFeliz;
-            avatarImg.style.transform = "rotate(0deg) scale(1)"; // Vuelve a la normalidad
-        });
-
-
-        // --- Lógica de Clics ---
-
-        // Al hacer click en SI
-        yesBtn.addEventListener('click', () => {
-            title.innerText = "Hurra!"; // ¡Hurra!
-            p.style.display = 'none';
-            buttonsDiv.style.display = 'none';
-            successMsg.style.display = 'block';
-            // Aseguramos la foto feliz al final
-            avatarImg.src = imagenFeliz;
-            avatarImg.style.transform = "scale(1.2)";
-            
-            // Lluvia de corazones
-            createHearts();
-        });
-
-        // Al hacer click en NO (si lo logra)
-        noBtn.addEventListener('click', () => {
-            alert("Det var fel svar! Försök igen! (Respuesta incorrecta, intenta de nuevo)");
-        });
-
-        // Función para la lluvia de corazones
-        function createHearts() {
-            const colors = ['#ff5e57', '#ff4757', '#2ecc71', '#ff6b81']; // Un poco de variación de color
-            
-            setInterval(() => {
-                const heart = document.createElement('div');
-                heart.innerHTML = '❤️';
-                heart.style.position = 'fixed';
-                // Posición horizontal aleatoria
-                heart.style.left = Math.random() * 100 + 'vw';
-                // Empieza desde arriba
-                heart.style.top = '-10vh';
-                // Tamaño aleatorio
-                const size = Math.random() * 25 + 15;
-                heart.style.fontSize = size + 'px';
-                // Velocidad aleatoria
-                const duration = Math.random() * 2 + 3; // Entre 3 y 5 segundos
-                heart.style.transition = `top ${duration}s linear, opacity ${duration}s ease-in`;
-                heart.style.zIndex = '0';
-                heart.style.opacity = '0.8';
+        // Lógica de movimiento (Igual que antes pero optimizada)
+        document.addEventListener('mousemove', (e) => {
+            function getOpacityForButton(btn) {
+                const rect = btn.getBoundingClientRect();
+                const btnCenterX = rect.left + rect.width / 2;
+                const btnCenterY = rect.top + rect.height / 2;
+                const dist = Math.sqrt(Math.pow(e.clientX - btnCenterX, 2) + Math.pow(e.clientY - btnCenterY, 2));
                 
-                document.body.appendChild(heart);
+                let rawOpacity = 1 - (dist / maxDistance);
+                rawOpacity = Math.max(0, Math.min(1, rawOpacity));
+                return Math.pow(rawOpacity, 3); 
+            }
 
-                // Activar la animación
-                setTimeout(() => {
-                    heart.style.top = '110vh'; // Cae hasta abajo
-                    heart.style.opacity = '0'; // Se desvanece
-                }, 100);
+            layerHappy.style.opacity = getOpacityForButton(btnSi);
+            layerSad.style.opacity = getOpacityForButton(btnNo);
+        });
 
-                // Limpiar el elemento después de que caiga
-                setTimeout(() => {
-                    heart.remove();
-                }, duration * 1000);
-            }, 200); // Un corazón cada 200ms
-        }
+        // Evento al hacer clic en SÍ
+        btnSi.addEventListener('click', () => {
+            // "¡Te amo! Eres lo mejor que me ha pasado."
+            alert("Jag älskar dig! Du är det bästa som hänt mig! ❤️❤️❤️");
+        });
+
+        // (Opcional) Hacer que el botón NO huya si intenta hacer clic
+        btnNo.addEventListener('mouseover', () => {
+           // Si quieres ser muy travieso, descomenta la linea de abajo para mover el botón NO
+           // btnNo.style.transform = `translate(${Math.random()*100 - 50}px, ${Math.random()*100 - 50}px)`;
+        });
+
     </script>
 </body>
 </html>
