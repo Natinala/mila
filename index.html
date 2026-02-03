@@ -28,7 +28,7 @@
             justify-content: space-between; 
             color: var(--text-main);
             position: relative;
-            touch-action: none; /* Evita zoom accidental */
+            touch-action: none; 
         }
 
         /* --- FONDO ANIMADO --- */
@@ -225,7 +225,7 @@
         }
 
         /* --- RESPONSIVE MÓVIL --- */
-        @media (max-width: 850px) { /* Aumentado a 850px para cubrir más celulares */
+        @media (max-width: 850px) { 
             h1 { font-size: 2.2rem; margin-bottom: 5px; }
             p { font-size: 1rem; margin-bottom: 20px; }
             
@@ -233,15 +233,14 @@
                 gap: 20px; 
                 flex-direction: column; 
                 align-items: center; 
-                height: auto; /* Permitir que crezca */
+                height: auto; 
             }
 
-            /* Botones MÁS PEQUEÑOS en móvil */
             .btn { 
                 width: auto; 
                 min-width: 120px;
-                padding: 10px 25px; /* Menos relleno */
-                font-size: 1rem; /* Letra más pequeña */
+                padding: 10px 25px; 
+                font-size: 1rem; 
             }
             
             .character-stage { height: 45vh; }
@@ -258,7 +257,8 @@
     </div>
 
     <div class="top-section" id="main-ui">
-        <h1>Cami vill du vara min dejt på alla hjärtans dag?</h1>
+        <h1>Vill du bli min Valentin?</h1>
+        <p>Du får mitt hjärta att slå ett extra slag...</p>
 
         <div class="btn-container">
             <button id="yes-btn" class="btn">Ja, självklart! ❤️</button>
@@ -277,7 +277,7 @@
         <div class="content-wrapper">
             <img src="respuestafeliz.png" class="response-img" alt="Happy Response">
             <div class="final-text">
-                <h2>YAAYYY❤️</h2>
+                <h2>YAAAYYY!</h2>
                 <p>Jag älskar dig</p>
             </div>
         </div>
@@ -287,7 +287,7 @@
         <div class="content-wrapper">
             <img src="respuestatriste.png" class="response-img" alt="Sad Response">
             <div class="final-text">
-                <h2 style="color: #888;">Neeeeej... 💔</h2>
+                <h2 style="color: #888;">Neeeeej...💔</h2>
                 <p>Är du säker?</p>
             </div>
         </div>
@@ -307,17 +307,19 @@
 
         const SENSITIVITY = 400; 
 
-        // Variables de juego móvil
+        // Variables de estado
         let mobileNoClicks = 0;
-        const maxMobileClicks = 5;
-
-        // Detección robusta de dispositivo táctil
+        const maxMobileClicks = 3;
         const isMobile = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (window.innerWidth < 850);
+        
+        // VARIABLE NUEVA: Bloqueo de transición
+        let isTransitioning = false;
 
-        // --- 1. CARAS (Solo si NO es táctil para evitar lag) ---
+        // --- 1. CARAS (Interacción) ---
         if (!isMobile) {
             document.addEventListener('mousemove', (e) => {
-                if(successOverlay.classList.contains('active') || sadOverlay.classList.contains('active')) return;
+                // Si ya estamos en transición (esperando el segundo), no hacer nada
+                if (isTransitioning || successOverlay.classList.contains('active') || sadOverlay.classList.contains('active')) return;
 
                 const distYes = getDist(btnYes, e.clientX, e.clientY);
                 const distNo = getDist(btnNo, e.clientX, e.clientY);
@@ -351,47 +353,41 @@
             return Math.sqrt(Math.pow(mx - cx, 2) + Math.pow(my - cy, 2));
         }
 
-        // --- 2. LÓGICA BOTÓN "NO" ---
+        // --- 2. LOGICA BOTÓN "NO" ---
         
-        // Versión Desktop (Mouse): Huye al acercarse
+        // Escritorio: Huir
         if (!isMobile) {
             btnNo.addEventListener('mouseover', () => {
+                if (isTransitioning) return; // No huir si ya le dimos click
                 const x = (Math.random() * 300) - 150;
                 const y = (Math.random() * 300) - 150;
                 btnNo.style.transform = `translate(${x}px, ${y}px)`;
             });
         }
 
-        // Versión Click (Universal)
+        // Click Handler (Universal)
         btnNo.addEventListener('click', (e) => {
             e.preventDefault();
+            if (isTransitioning) return; // Evitar doble click
 
-            // LÓGICA ESTRICTA PARA MÓVIL
             if (isMobile) {
-                mobileNoClicks++; // Aumenta contador
-                
-                // Click 1 y 2: Se mueve
+                mobileNoClicks++; 
                 if (mobileNoClicks < maxMobileClicks) {
                     moveButtonWildly(); 
-                } 
-                // Click 3: Pierde
-                else {
-                    transitionToOverlay(sadOverlay);
+                } else {
+                    // Click final en móvil
+                    triggerTransition(imgSad, sadOverlay);
                 }
-            } 
-            // LÓGICA DESKTOP (Si logran darle clic, pierden directo)
-            else {
-                transitionToOverlay(sadOverlay);
+            } else {
+                // Click en escritorio
+                triggerTransition(imgSad, sadOverlay);
             }
         });
 
-        // Función Teletransporte Móvil
         function moveButtonWildly() {
             btnNo.style.position = 'fixed';
-            // Z-index alto para que se vea sobre todo
             btnNo.style.zIndex = '1000'; 
             
-            // Márgenes de seguridad para que no quede cortado
             const margin = 20;
             const maxX = window.innerWidth - btnNo.offsetWidth - margin;
             const maxY = window.innerHeight - btnNo.offsetHeight - margin;
@@ -401,24 +397,45 @@
 
             btnNo.style.left = randomX + 'px';
             btnNo.style.top = randomY + 'px';
-            btnNo.style.transform = 'none'; // Quitamos transform para usar top/left limpio
+            btnNo.style.transform = 'none'; 
         }
 
-        // --- 3. LÓGICA BOTÓN "SÍ" ---
+        // --- 3. LOGICA BOTÓN "SÍ" ---
         btnYes.addEventListener('click', (e) => {
             e.preventDefault();
-            transitionToOverlay(successOverlay);
+            if (isTransitioning) return;
+            
+            // Disparar confeti inmediatamente para celebrar
             startConfetti();
+            // Iniciar transición con espera
+            triggerTransition(imgHappy, successOverlay);
         });
 
-        function transitionToOverlay(overlay) {
-            mainUi.style.opacity = 0;
-            charStage.style.opacity = 0;
+        // --- FUNCIÓN MAESTRA DE TRANSICIÓN CON ESPERA ---
+        function triggerTransition(targetImage, overlay) {
+            isTransitioning = true; // Bloqueamos movimiento
+
+            // 1. Forzar mostrar la imagen de reacción (Feliz o Triste)
+            imgNeutral.style.opacity = 0;
+            imgHappy.style.opacity = 0;
+            imgSad.style.opacity = 0;
+            
+            targetImage.style.opacity = 1; 
+            targetImage.style.zIndex = 10; // Asegurar que esté encima
+            
+            // 2. Esperar 1 segundo (1000ms)
             setTimeout(() => {
-                mainUi.style.display = 'none';
-                charStage.style.display = 'none';
-                overlay.classList.add('active');
-            }, 500);
+                // 3. Desvanecer UI
+                mainUi.style.opacity = 0;
+                charStage.style.opacity = 0;
+                
+                // 4. Mostrar Overlay final
+                setTimeout(() => {
+                    mainUi.style.display = 'none';
+                    charStage.style.display = 'none';
+                    overlay.classList.add('active');
+                }, 500); // Tiempo del fade-out CSS
+            }, 1000); // Tiempo de espera viendo la cara
         }
 
         // --- CONFETI ---
