@@ -21,11 +21,11 @@
             height: 100vh;
             font-family: 'Lato', sans-serif;
             background-color: var(--bg-color);
-            overflow: hidden; /* Evita scroll en la vista principal */
+            overflow: hidden; 
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: space-between; /* Distribuye el espacio verticalmente */
+            justify-content: space-between; 
             color: var(--text-main);
             position: relative;
         }
@@ -52,22 +52,22 @@
             100% { transform: translate(30px, 50px) scale(1.1); }
         }
 
-        /* --- CONTENIDO PRINCIPAL (TEXTO Y BOTONES) --- */
+        /* --- CONTENIDO PRINCIPAL --- */
         .top-section {
             text-align: center;
             width: 100%;
-            padding-top: 5vh; /* Espacio arriba */
+            padding-top: 5vh; 
             z-index: 10;
+            transition: opacity 0.5s;
         }
 
         h1 {
             font-family: 'Playfair Display', serif;
-            font-size: 3.5rem; /* Título más grande */
+            font-size: 3.5rem; 
             margin: 0;
             background: -webkit-linear-gradient(45deg, #c2255c, #ff4757);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            /* Sombra suave para que se lea bien sin contenedor */
             filter: drop-shadow(0 2px 4px rgba(255,255,255,0.5));
             line-height: 1.2;
         }
@@ -81,13 +81,13 @@
             text-shadow: 0 1px 2px rgba(255,255,255,0.8);
         }
 
-        /* --- BOTONES (MUY SEPARADOS) --- */
+        /* --- BOTONES --- */
         .btn-container {
             display: flex;
-            justify-content: center; /* Centrados horizontalmente */
-            gap: 150px; /* GRAN SEPARACIÓN para notar el cambio de cara */
+            justify-content: center; 
+            gap: 150px; /* Separación amplia */
             width: 100%;
-            max-width: 800px; /* Permite que se separen bastante en PC */
+            max-width: 800px; 
             margin: 0 auto;
             position: relative;
             padding: 20px 0;
@@ -105,67 +105,64 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             white-space: nowrap;
+            /* Importante para el z-index en móvil */
+            z-index: 50; 
         }
 
         #yes-btn {
             background: linear-gradient(135deg, #ff6b6b 0%, #f03e3e 100%);
             color: white;
             box-shadow: 0 8px 20px rgba(240, 62, 62, 0.3);
-            z-index: 20;
         }
         #yes-btn:hover { transform: scale(1.1); box-shadow: 0 10px 25px rgba(240, 62, 62, 0.5); }
 
         #no-btn {
-            background: rgba(255,255,255,0.8);
+            background: rgba(255,255,255,0.9);
             color: #c92a2a;
             border: 2px solid #ffc9c9;
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            /* Importante para que se mueva */
             position: relative; 
+            transition: all 0.3s ease; /* Movimiento suave */
         }
 
-        /* --- PERSONAJE (EN LA BASE) --- */
+        /* --- PERSONAJE --- */
         .character-stage {
             position: relative;
             width: 100%;
-            height: 50vh; /* Ocupa la mitad inferior */
+            height: 50vh; 
             max-height: 500px;
             display: flex;
             justify-content: center;
-            align-items: flex-end; /* Alineado abajo */
+            align-items: flex-end; 
             z-index: 5;
-            pointer-events: none; /* Click a través de la imagen */
+            pointer-events: none; 
         }
 
         .character-img {
             position: absolute;
             bottom: 0;
             height: 100%; 
-            width: auto; /* Mantiene proporción */
+            width: auto; 
             max-width: 90%;
             object-fit: contain;
             transition: opacity 0.3s ease;
             filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.6));
         }
 
-        /* Clases de visibilidad */
         .img-visible { opacity: 1; z-index: 2; }
         .img-hidden { opacity: 0; z-index: 1; }
-        #img-neutral { z-index: 0; } /* Neutral siempre al fondo */
+        #img-neutral { z-index: 0; } 
 
-        /* --- PANTALLAS FINALES (OVERLAYS) --- */
+        /* --- OVERLAYS (PANTALLAS FINALES) --- */
         .overlay {
             position: fixed;
-            inset: 0; /* Top, left, right, bottom 0 */
-            background: #fff0f3; /* Fondo sólido */
+            inset: 0; 
+            background: #fff0f3; 
             z-index: 100;
-            
-            /* Flexbox para centrar todo perfectamente */
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.5s ease;
@@ -186,16 +183,15 @@
             max-width: 600px;
         }
 
-        /* Imágenes de respuesta grandes y centradas */
         .response-img {
             width: auto;
             height: auto;
-            max-width: 90%; /* No salirse del ancho */
-            max-height: 55vh; /* No ocupar toda la altura para dejar sitio al texto */
+            max-width: 90%; 
+            max-height: 55vh; 
             object-fit: contain;
             border-radius: 20px;
             box-shadow: 0 15px 40px rgba(0,0,0,0.15);
-            margin-bottom: 30px; /* Espacio para el texto debajo */
+            margin-bottom: 30px; 
             animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
@@ -219,7 +215,6 @@
             opacity: 0.9;
         }
 
-        /* Canvas Confeti */
         #confetti-canvas {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -231,7 +226,7 @@
         @media (max-width: 600px) {
             h1 { font-size: 2.5rem; }
             p { font-size: 1.1rem; }
-            .btn-container { gap: 20px; flex-direction: column; align-items: center; padding-bottom: 0; }
+            .btn-container { gap: 20px; flex-direction: column; align-items: center; }
             .btn { width: 80%; }
             .character-stage { height: 40vh; }
             .response-img { max-height: 45vh; }
@@ -266,7 +261,7 @@
         <div class="content-wrapper">
             <img src="respuestafeliz.png" class="response-img" alt="Happy Response">
             <div class="final-text">
-                <h2>Yaaayy!❤️</h2>
+                <h2>YAAAYYY! ❤️</h2>
                 <p>Jag älskar dig</p>
             </div>
         </div>
@@ -294,26 +289,24 @@
         const successOverlay = document.getElementById('success-overlay');
         const sadOverlay = document.getElementById('sad-overlay');
 
-        // Distancia base para reaccionar (mayor porque los botones están lejos)
         const SENSITIVITY = 400; 
 
-        // 1. LOGICA DE CAMBIO DE CARA
+        // Variable para contar los intentos en móvil
+        let mobileNoClicks = 0;
+        const maxMobileClicks = 3; // Al 3er click se rinde
+
+        // --- 1. LÓGICA DE CARAS (SOLO COMPUTADORA O MOUSE) ---
+        // Usamos matchMedia para detectar si NO es táctil (aprox) para la lógica de caras
+        // O simplemente dejamos que corra, en móvil el "mousemove" no disparará mucho.
         document.addEventListener('mousemove', (e) => {
             if(successOverlay.classList.contains('active') || sadOverlay.classList.contains('active')) return;
 
-            // Distancia al centro de cada botón
             const distYes = getDist(btnYes, e.clientX, e.clientY);
             const distNo = getDist(btnNo, e.clientX, e.clientY);
 
-            // Opacidad invertida (más cerca = 1)
-            let happyOp = Math.max(0, 1 - (distYes / SENSITIVITY));
-            let sadOp = Math.max(0, 1 - (distNo / SENSITIVITY));
+            let happyOp = Math.pow(Math.max(0, 1 - (distYes / SENSITIVITY)), 1.5);
+            let sadOp = Math.pow(Math.max(0, 1 - (distNo / SENSITIVITY)), 1.5);
 
-            // Potencia para hacer la transición más marcada cerca del botón
-            happyOp = Math.pow(happyOp, 1.5);
-            sadOp = Math.pow(sadOp, 1.5);
-
-            // Asignar opacidades
             if (happyOp > 0.1) {
                 imgHappy.style.opacity = happyOp;
                 imgSad.style.opacity = 0;
@@ -325,7 +318,6 @@
                 imgSad.style.opacity = 0;
             }
 
-            // Neutral: Se desvanece si alguna emoción es fuerte
             if (happyOp > 0.2 || sadOp > 0.2) {
                 imgNeutral.style.opacity = Math.max(0, 1 - (happyOp + sadOp));
             } else {
@@ -340,41 +332,76 @@
             return Math.sqrt(Math.pow(mx - cx, 2) + Math.pow(my - cy, 2));
         }
 
-        // 2. LOGICA BOTÓN "NO" ESCAPISTA
-        btnNo.addEventListener('mouseover', moveButton);
-        // Soporte para móvil (touch)
-        btnNo.addEventListener('touchstart', (e) => {
-            // En móvil solo se mueve si intentas tocarlo, a veces permitiendo el click por suerte
-            if (Math.random() > 0.3) moveButton(); 
+        // --- 2. LÓGICA BOTÓN "NO" (ESCAPISTA) ---
+        
+        // A) MODO ESCRITORIO (Mouse): Huye al acercarse
+        btnNo.addEventListener('mouseover', (e) => {
+            // Solo si es pantalla grande/mouse
+            if (window.matchMedia("(hover: hover)").matches) {
+                moveButtonSmoothly();
+            }
         });
 
-        function moveButton() {
-            // Movimiento aleatorio pero controlado
-            const offsetX = (Math.random() * 200) - 100; // -100px a 100px
-            const offsetY = (Math.random() * 100) - 50;  // -50px a 50px
-            
-            btnNo.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
-        }
-
-        // 3. CLICK EN NO (Si logra darle)
+        // B) MODO CLIC (Móvil y Escritorio)
         btnNo.addEventListener('click', (e) => {
             e.preventDefault();
-            transitionToOverlay(sadOverlay);
+
+            // Detectar si es Móvil (pantalla pequeña)
+            if (window.innerWidth <= 768) {
+                mobileNoClicks++;
+
+                // Si aún tiene intentos (click 1 y 2)
+                if (mobileNoClicks < maxMobileClicks) {
+                    moveButtonWildly(); // Salto grande
+                } else {
+                    // 3er click: Game Over
+                    transitionToOverlay(sadOverlay);
+                }
+            } else {
+                // En escritorio, si logra clickearlo (difícil), pierde directo
+                transitionToOverlay(sadOverlay);
+            }
         });
 
-        // 4. CLICK EN SI
+        // Función: Movimiento suave (Escritorio)
+        function moveButtonSmoothly() {
+            const x = (Math.random() * 200) - 100;
+            const y = (Math.random() * 100) - 50;
+            btnNo.style.transform = `translate(${x}px, ${y}px)`;
+        }
+
+        // Función: Movimiento salvaje (Móvil - Teletransporte)
+        function moveButtonWildly() {
+            // Hacemos el botón 'fixed' para poder moverlo a cualquier parte de la pantalla
+            btnNo.style.position = 'fixed';
+            
+            // Calculamos límites seguros (para que no se salga de la pantalla)
+            const margin = 20;
+            const maxX = window.innerWidth - btnNo.offsetWidth - margin;
+            const maxY = window.innerHeight - btnNo.offsetHeight - margin;
+            
+            const randomX = Math.max(margin, Math.random() * maxX);
+            const randomY = Math.max(margin, Math.random() * maxY);
+
+            // Aplicamos nueva posición
+            btnNo.style.left = randomX + 'px';
+            btnNo.style.top = randomY + 'px';
+            
+            // Reseteamos transform porque ahora usamos top/left
+            btnNo.style.transform = 'none';
+        }
+
+        // --- 3. LÓGICA BOTÓN "SÍ" ---
         btnYes.addEventListener('click', (e) => {
             e.preventDefault();
             transitionToOverlay(successOverlay);
             startConfetti();
         });
 
+        // --- UTILIDADES ---
         function transitionToOverlay(overlay) {
-            // Desvanecer pantalla principal
             mainUi.style.opacity = 0;
             charStage.style.opacity = 0;
-            
-            // Esperar y mostrar overlay
             setTimeout(() => {
                 mainUi.style.display = 'none';
                 charStage.style.display = 'none';
@@ -382,7 +409,7 @@
             }, 500);
         }
 
-        // 5. EFECTO CONFETI
+        // --- CONFETI ---
         function startConfetti() {
             const canvas = document.getElementById('confetti-canvas');
             const ctx = canvas.getContext('2d');
@@ -424,7 +451,6 @@
             animate();
         }
 
-        // Ajustar canvas al redimensionar
         window.addEventListener('resize', () => {
             const c = document.getElementById('confetti-canvas');
             if(c) { c.width = window.innerWidth; c.height = window.innerHeight; }
