@@ -1,191 +1,267 @@
 <!DOCTYPE html>
-<html lang="sv"> <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>För Min Älskling</title> <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>För Min Älskling</title>
 
-    <style>
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background: linear-gradient(135deg, #ffe6e6 0%, #ffc3cf 100%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            overflow: hidden; /* Para que los corazones no creen scroll */
-            color: #d6336c;
-        }
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
 
-        /* --- FONDO DE CORAZONES ANIMADOS --- */
-        .heart-bg {
-            position: absolute;
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 2rem;
-            animation: floatUp 10s linear infinite;
-            z-index: 0;
-            user-select: none;
-        }
+<style>
+body{
+    margin:0;
+    height:100vh;
+    font-family:'Montserrat',sans-serif;
+    background:linear-gradient(135deg,#ffe6e6,#ffc3cf);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow:hidden;
+    color:#880e4f;
+}
 
-        @keyframes floatUp {
-            0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
-            50% { opacity: 0.8; }
-            100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
-        }
+.main{
+    text-align:center;
+    z-index:2;
+    padding:20px;
+    max-width:420px;
+    transition: opacity 0.5s ease;
+}
 
-        /* --- CONTENEDOR PRINCIPAL --- */
-        .main-content {
-            z-index: 10;
-            text-align: center;
-            position: relative;
-        }
+h1{
+    font-family:'Great Vibes',cursive;
+    font-size:3.2rem;
+    margin-bottom:10px;
+    color:#c2185b;
+}
 
-        h1 {
-            font-family: 'Great Vibes', cursive;
-            font-size: 4rem;
-            margin-bottom: 0.2rem;
-            text-shadow: 2px 2px 4px rgba(255, 105, 180, 0.2);
-            color: #c2185b;
-        }
+p{
+    font-size:1.1rem;
+    margin-bottom:20px;
+}
 
-        p {
-            font-size: 1.2rem;
-            margin-bottom: 30px;
-            color: #880e4f;
-        }
+.character{
+    width:240px;
+    height:340px;
+    margin:0 auto 20px;
+    position:relative;
+}
 
-        /* --- IMÁGENES DEL PERSONAJE --- */
-        .character-wrapper {
-            position: relative;
-            width: 300px;
-            height: 450px;
-            margin: 0 auto 30px auto;
-        }
+.character img{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    transition:opacity .2s ease;
+}
 
-        .character-img {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            transition: opacity 0.15s ease-out;
-            pointer-events: none;
-            filter: drop-shadow(0 10px 15px rgba(194, 24, 91, 0.3)); /* Sombra rosa suave */
-        }
+#happy,#sad{opacity:0}
 
-        .neutral { z-index: 1; opacity: 1; }
-        .emotion-layer { z-index: 2; opacity: 0; }
+/* Se aumentó el gap a 60px para separar más los botones */
+.buttons{
+    display:flex;
+    gap:60px; 
+    justify-content:center;
+    align-items: center;
+    margin-top: 30px;
+}
 
-        /* --- BOTONES --- */
-        .buttons-container {
-            display: flex;
-            justify-content: center;
-            gap: 40px;
-            position: relative;
-            z-index: 20;
-        }
+button{
+    padding:14px 30px;
+    border-radius:999px;
+    border:none;
+    font-size:1.1rem;
+    font-weight:700;
+    cursor:pointer;
+}
 
-        .btn {
-            padding: 15px 40px;
-            font-size: 1.2rem;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            font-family: 'Montserrat', sans-serif;
-            font-weight: bold;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
+#yes{
+    background:#ff4081;
+    color:white;
+    transition: transform 0.2s;
+}
 
-        #btn-si {
-            background-color: #ff4081;
-            color: white;
-            border: 2px solid #ff4081;
-        }
+#yes:hover { transform: scale(1.1); }
 
-        #btn-si:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 20px rgba(255, 64, 129, 0.6);
-        }
+#no{
+    background:white;
+    color:#880e4f;
+    border:2px solid #f8bbd0;
+    position: relative;
+    /* Transición suave para el escape en desktop */
+    transition: transform 0.2s ease-out; 
+}
 
-        #btn-no {
-            background-color: white;
-            color: #880e4f;
-            border: 2px solid #f8bbd0;
-        }
+/* Animación de temblor más intensa */
+@keyframes shake {
+    0% { margin-left: 0rem; }
+    25% { margin-left: 0.2rem; }
+    75% { margin-left: -0.2rem; }
+    100% { margin-left: 0rem; }
+}
 
-        #btn-no:hover {
-            background-color: #ffebee;
-        }
+.shaking {
+    animation: shake 0.1s infinite;
+}
 
-    </style>
+/* reproductor youtube */
+.player-wrapper{
+    position:fixed;
+    bottom:20px;
+    left:50%;
+    transform:translateX(-50%);
+    width:300px;
+    height:60px;
+    overflow:hidden;
+    border-radius:14px;
+    opacity:.85;
+}
+.player-wrapper iframe{
+    width:300px;
+    height:180px;
+    margin-top:-60px;
+}
+
+/* pantalla final */
+.final{
+    position:fixed;
+    inset:0;
+    background:linear-gradient(135deg,#ff80ab,#ffb6c1);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    opacity:0;
+    pointer-events:none;
+    transition:.6s;
+    z-index: 10;
+}
+
+.final.active{
+    opacity:1;
+    pointer-events:auto;
+}
+
+.final-box{
+    background:rgba(255,255,255,.25);
+    backdrop-filter:blur(10px);
+    padding:40px;
+    border-radius:30px;
+    color:white;
+}
+
+.final-box h2{
+    font-family:'Great Vibes',cursive;
+    font-size:3rem;
+}
+</style>
 </head>
 <body>
 
-    <div class="heart-bg" style="left: 10%; animation-duration: 8s;">❤️</div>
-    <div class="heart-bg" style="left: 30%; animation-duration: 12s; font-size: 1.5rem;">💖</div>
-    <div class="heart-bg" style="left: 70%; animation-duration: 7s;">💕</div>
-    <div class="heart-bg" style="left: 90%; animation-duration: 10s; font-size: 3rem;">❤️</div>
-    <div class="heart-bg" style="left: 50%; animation-duration: 15s;">💘</div>
-
-    <div class="main-content">
-        
-        <div class="character-wrapper">
-            <img src="neutral.png" class="character-img neutral" alt="Tänker">
-            
-            <img src="feliz.png" class="character-img emotion-layer" id="layer-happy" alt="Glad">
-            <img src="triste.png" class="character-img emotion-layer" id="layer-sad" alt="Ledsen">
-        </div>
-
-        <h1>Vill du bli min Valentin?</h1>
-        
-        <p>Du får mitt hjärta att slå snabbare...</p>
-
-        <div class="buttons-container">
-            <button id="btn-si" class="btn">Ja, självklart! ❤️</button>
-            
-            <button id="btn-no" class="btn">Nej...</button>
-        </div>
+<div class="main" id="main-content">
+    <div class="character" id="character-container">
+        <img src="neutral.png" id="neutral">
+        <img src="feliz.png" id="happy">
+        <img src="triste.png" id="sad">
     </div>
 
-    <script>
-        const layerHappy = document.getElementById('layer-happy');
-        const layerSad = document.getElementById('layer-sad');
-        const btnSi = document.getElementById('btn-si');
-        const btnNo = document.getElementById('btn-no');
-        const maxDistance = 350; 
+    <h1>Vill du bli min Valentin?</h1>
+    <p>Du får mitt hjärta att slå snabbare…</p>
 
-        // Lógica de movimiento (Igual que antes pero optimizada)
-        document.addEventListener('mousemove', (e) => {
-            function getOpacityForButton(btn) {
-                const rect = btn.getBoundingClientRect();
-                const btnCenterX = rect.left + rect.width / 2;
-                const btnCenterY = rect.top + rect.height / 2;
-                const dist = Math.sqrt(Math.pow(e.clientX - btnCenterX, 2) + Math.pow(e.clientY - btnCenterY, 2));
-                
-                let rawOpacity = 1 - (dist / maxDistance);
-                rawOpacity = Math.max(0, Math.min(1, rawOpacity));
-                return Math.pow(rawOpacity, 3); 
-            }
+    <div class="buttons">
+        <button id="yes">Ja, självklart</button>
+        <button id="no">Nej</button>
+    </div>
+</div>
 
-            layerHappy.style.opacity = getOpacityForButton(btnSi);
-            layerSad.style.opacity = getOpacityForButton(btnNo);
-        });
+<div class="player-wrapper" id="player">
+<iframe
+    src="https://www.youtube.com/embed/dSRZ_1ncRhQ?enablejsapi=1&controls=1"
+    frameborder="0"
+    allow="autoplay; encrypted-media">
+</iframe>
+</div>
 
-        // Evento al hacer clic en SÍ
-        btnSi.addEventListener('click', () => {
-            // "¡Te amo! Eres lo mejor que me ha pasado."
-            alert("Jag älskar dig! Du är det bästa som hänt mig! ❤️❤️❤️");
-        });
+<div class="final" id="final">
+    <div class="final-box">
+        <h2>Jag älskar dig</h2>
+        <p>Du är det bästa som hänt mig  
+        och jag väljer dig idag och alltid.</p>
+    </div>
+</div>
 
-        // (Opcional) Hacer que el botón NO huya si intenta hacer clic
-        btnNo.addEventListener('mouseover', () => {
-           // Si quieres ser muy travieso, descomenta la linea de abajo para mover el botón NO
-           // btnNo.style.transform = `translate(${Math.random()*100 - 50}px, ${Math.random()*100 - 50}px)`;
-        });
+<script>
+const yes = document.getElementById('yes');
+const no = document.getElementById('no');
+const happy = document.getElementById('happy');
+const sad = document.getElementById('sad');
+const characterContainer = document.getElementById('character-container');
+const finalScreen = document.getElementById('final');
+const mainContent = document.getElementById('main-content');
 
-    </script>
+const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768;
+
+/* Lógica para Computadora (Escapar y Temblar) */
+if(!isMobile) {
+    document.addEventListener('mousemove', e => {
+        const r = no.getBoundingClientRect();
+        const btnCenterX = r.left + r.width / 2;
+        const btnCenterY = r.top + r.height / 2;
+        
+        // Distancia entre cursor y botón
+        const distance = Math.hypot(e.clientX - btnCenterX, e.clientY - btnCenterY);
+
+        // Control de opacidad de emociones
+        const dYes = Math.hypot(e.clientX - (yes.getBoundingClientRect().left + yes.offsetWidth/2), e.clientY - (yes.getBoundingClientRect().top + yes.offsetHeight/2));
+        happy.style.opacity = Math.max(0, 1 - dYes / 250);
+        sad.style.opacity = Math.max(0, 1 - distance / 250);
+
+        // Efecto de huida si el cursor está a menos de 120px
+        if (distance < 120) {
+            no.classList.add('shaking');
+            
+            // Calculamos dirección opuesta
+            const angle = Math.atan2(btnCenterY - e.clientY, btnCenterX - e.clientX);
+            
+            // Se aleja 40px de la posición original
+            const pushX = Math.cos(angle) * 40;
+            const pushY = Math.sin(angle) * 40;
+
+            no.style.transform = `translate(${pushX}px, ${pushY}px)`;
+        } else {
+            no.classList.remove('shaking');
+            no.style.transform = `translate(0, 0)`;
+        }
+    });
+}
+
+/* Botón NO: Comportamiento */
+no.addEventListener('click', () => {
+    if (isMobile) {
+        // Salto abrupto solo en móvil
+        const maxX = window.innerWidth - no.offsetWidth - 20;
+        const maxY = window.innerHeight - no.offsetHeight - 20;
+        const x = Math.random() * maxX;
+        const y = Math.random() * maxY;
+        no.style.position = 'fixed';
+        no.style.left = x + 'px';
+        no.style.top = y + 'px';
+    } else {
+        alert("¡Casi! Inténtalo de nuevo ❤️");
+    }
+});
+
+/* Botón SÍ: Desaparecer PNGs y mostrar final */
+yes.addEventListener('click', () => {
+    characterContainer.style.display = 'none'; // Desaparecen los PNGs por completo
+    mainContent.style.opacity = '0';
+    
+    setTimeout(() => {
+        finalScreen.classList.add('active');
+    }, 300);
+});
+</script>
+
 </body>
 </html>
